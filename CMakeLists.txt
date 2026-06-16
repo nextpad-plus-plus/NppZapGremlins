@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(NppZapGremlins LANGUAGES CXX OBJCXX)
+project(NppZapGremlins VERSION 1.0.1 LANGUAGES CXX OBJCXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_OBJCXX_STANDARD 17)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
@@ -26,8 +26,10 @@ target_compile_options(NppZapGremlins PRIVATE
     -fvisibility=hidden
     $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc>)
 set_target_properties(NppZapGremlins PROPERTIES PREFIX "" SUFFIX ".dylib")
+# Stamp version into the dylib Mach-O current_version (Plugins Admin reads it).
+target_link_options(NppZapGremlins PRIVATE "-Wl,-current_version,${PROJECT_VERSION}")
 
-set(PLUGIN_INSTALL_DIR "$ENV{HOME}/.nextpad++/plugins/NppZapGremlins")
+set(PLUGIN_INSTALL_DIR "$ENV{HOME}/Library/Application Support/Nextpad++/plugins/NppZapGremlins")
 install(TARGETS NppZapGremlins DESTINATION "${PLUGIN_INSTALL_DIR}")
 install(DIRECTORY resources/ DESTINATION "${PLUGIN_INSTALL_DIR}/resources"
     PATTERN ".DS_Store"  EXCLUDE

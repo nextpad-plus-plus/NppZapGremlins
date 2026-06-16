@@ -92,7 +92,9 @@ static NSString *stdToNs(const std::string &s) { return [NSString stringWithUTF8
 static std::string iniPath() {
     char buf[1024] = {0};
     npp(NPPM_GETPLUGINSCONFIGDIR, sizeof(buf), (intptr_t)buf);
-    std::string dir = buf[0] ? buf : (nsToStd(NSHomeDirectory()) + "/.nextpad++/plugins/Config");
+    // Fallback only if the host returns empty (it does not on shipped versions):
+    // the app-support base, NOT a legacy ~/.nextpad++ dot-folder.
+    std::string dir = buf[0] ? buf : (nsToStd(NSHomeDirectory()) + "/Library/Application Support/Nextpad++/plugins/Config");
     return dir + "/NppZapGremlins.ini";
 }
 static void loadSettings() {
